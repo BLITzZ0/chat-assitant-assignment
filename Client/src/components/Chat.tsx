@@ -14,10 +14,9 @@ export default function Chat() {
   );
   const [loading, setLoading] = useState(false);
 
-  // reference for auto scroll
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
-  // Load chat history on refresh
+  // Load chat history
   useEffect(() => {
     if (!sessionId) return;
 
@@ -28,7 +27,7 @@ export default function Chat() {
     });
   }, [sessionId]);
 
-  // Auto scroll whenever messages change
+  // Auto-scroll
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -36,12 +35,12 @@ export default function Chat() {
   async function handleSend() {
     if (!input.trim() || loading) return;
 
-    const userMsg: Message = {
+    const userMessage: Message = {
       sender: "user",
       text: input,
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setLoading(true);
 
@@ -52,97 +51,51 @@ export default function Chat() {
       setSessionId(data.sessionId);
     }
 
-    const aiMsg: Message = {
+    const aiMessage: Message = {
       sender: "ai",
       text: data.reply,
     };
 
-    setMessages((prev) => [...prev, aiMsg]);
+    setMessages((prev) => [...prev, aiMessage]);
     setLoading(false);
   }
 
-  return (
-    <div style={styles.container}>
-      <h2>Customer Support Chat</h2>
+  function handleReset() {
+    localStorage.removeItem("sessionId");
+    setSessionId(null);
+    setMessages([]);
+  }
 
-      <div style={styles.chatBox}>
+  return (
+    <div className="container">
+      <div className="header">
+        <h2>Customer Support Chat</h2>
+        <button className="resetBtn" onClick={handleReset}>
+          New Chat
+        </button>
+      </div>
+
+      <div className="chatBox">
         {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            style={{
-              ...styles.message,
-              alignSelf:
-                msg.sender === "user" ? "flex-end" : "flex-start",
-              background:
-                msg.sender === "user" ? "#DCF8C6" : "#F1F1F1",
-            }}
-          >
+          <div key={idx} className={`message ${msg.sender}`}>
             {msg.text}
           </div>
         ))}
 
-        {loading && (
-          <div style={styles.typing}>Support is typing…</div>
-        )}
+        {loading && <div className="typing">Support is typing…</div>}
 
-        {/* Auto-scroll anchor */}
         <div ref={bottomRef} />
       </div>
 
-      <div style={styles.inputRow}>
+      <div className="inputRow">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type your message..."
-          style={styles.input}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
-        <button onClick={handleSend} style={styles.button}>
-          Send
-        </button>
+        <button onClick={handleSend}>Send</button>
       </div>
     </div>
   );
 }
-
-const styles: any = {
-  container: {
-    maxWidth: 420,
-    margin: "40px auto",
-    fontFamily: "Arial, sans-serif",
-  },
-  chatBox: {
-    border: "1px solid #ccc",
-    padding: 10,
-    height: 350,
-    overflowY: "auto",
-    display: "flex",
-    flexDirection: "column",
-    gap: 8,
-    marginBottom: 10,
-  },
-  message: {
-    padding: "8px 12px",
-    borderRadius: 12,
-    maxWidth: "80%",
-    wordBreak: "break-word",
-  },
-  typing: {
-    fontSize: 12,
-    color: "#666",
-    marginTop: 4,
-  },
-  inputRow: {
-    display: "flex",
-    gap: 8,
-  },
-  input: {
-    flex: 1,
-    padding: 8,
-    fontSize: 14,
-  },
-  button: {
-    padding: "8px 14px",
-    cursor: "pointer",
-  },
-};

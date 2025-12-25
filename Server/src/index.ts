@@ -5,7 +5,11 @@ import "./db/database";
 import chatRoutes from "./routes/chat";
 
 const app = express();
+const PORT = process.env.PORT || 3001;
 
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 
 app.use(cors());
@@ -15,8 +19,8 @@ app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
-console.log("GROQ KEY LOADED:", !!process.env.GROQ_API_KEY);
 
-app.listen(3001, () => {
-  console.log("Server running on http://localhost:3001");
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
