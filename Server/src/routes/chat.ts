@@ -5,9 +5,7 @@ import { generateAIReply } from "../services/llmservice";
 
 const router = Router();
 
-/* -----------------------------
-   STORE KNOWLEDGE (FACTS)
------------------------------- */
+//STORE KNOWLEDGE (FACTS)
 const STORE_INFO = {
   shipping: "We ship within 5–7 days and also ship internationally.",
   returns: "We offer a 30-day return policy on unused items in original condition.",
@@ -15,9 +13,7 @@ const STORE_INFO = {
   support: "Our support hours are from 9am to 6pm IST.",
 };
 
-/* -----------------------------
-   INTENT DETECTION
------------------------------- */
+//INTENT DETECTION
 function detectIntent(message: string): keyof typeof STORE_INFO | null {
   const msg = message.toLowerCase();
 
@@ -32,9 +28,7 @@ function detectIntent(message: string): keyof typeof STORE_INFO | null {
   return null;
 }
 
-/* -----------------------------
-   SYSTEM PROMPT BUILDER
------------------------------- */
+//SYSTEM PROMPT BUILDER
 function buildSystemPrompt(intent: keyof typeof STORE_INFO | null): string {
   let prompt = `
 You are a customer support AI assistant for a small ecommerce store.
@@ -61,9 +55,9 @@ If no store information is provided, reply ONLY with:
   return prompt;
 }
 
-/* -----------------------------
-   CHAT MESSAGE API
------------------------------- */
+
+//CHAT MESSAGE API
+
 router.post("/message", async (req, res) => {
   const { message, sessionId } = req.body;
 
@@ -113,9 +107,7 @@ router.post("/message", async (req, res) => {
   }
 });
 
-/* -----------------------------
-   CHAT HISTORY API
------------------------------- */
+//CHAT HISTORY API
 router.get("/history", (req, res) => {
   const { sessionId } = req.query;
 
