@@ -1,4 +1,5 @@
-const API_BASE = "http://localhost:3001/chat";
+const API_BASE = "https://chat-assistant-bot.onrender.com/chat";
+
 
 export async function sendMessage(
   message: string,
