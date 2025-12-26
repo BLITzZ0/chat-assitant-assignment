@@ -1,4 +1,4 @@
-const API_BASE = "https://chat-assistant-bot.onrender.com/chat";
+const API_BASE = "https://chat-assitant-assignment.onrender.com";
 
 
 export async function sendMessage(
